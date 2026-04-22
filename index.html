@@ -1,1 +1,95 @@
-<a href="https://example.com">Test Link</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bandit Clone （Safe Prototype）</title>
+  <style>
+    body ｛
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding-top: 50px;
+    ｝
+    button ｛
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 18px;
+      cursor: pointer;
+    ｝
+    .log ｛
+      margin-top: 20px;
+      height: 200px;
+      overflow-y: auto;
+      border: 1px solid #444;
+      padding: 10px;
+    ｝
+  </style>
+</head>
+<body>
+
+<h1>💰 Bandit Risk Game</h1>
+<p>Balance: <span id="balance">100</span></p>
+<p>Current Pot: <span id="pot">0</span></p>
+
+<button onclick="enter（）">Enter Round （+10）</button>
+<button onclick="cashOut（）">Cash Out</button>
+
+<div class="log" id="log"></div>
+
+<script>
+let balance = 100;
+let pot = 0;
+let active = false;
+
+function log（msg） ｛
+  const el = document.getElementById（"log"）;
+  el.innerHTML += msg + "<br>";
+  el.scrollTop = el.scrollHeight;
+｝
+
+function update（） ｛
+  document.getElementById（"balance"）.innerText = balance;
+  document.getElementById（"pot"）.innerText = pot;
+｝
+
+function enter（） ｛
+  if （balance < 10） return log（"Not enough balance."）;
+  if （active） return log（"Already in round!"）;
+
+  balance -= 10;
+  pot = 10;
+  active = true;
+  log（"You entered the round."）;
+  update（）;
+
+  // random crash timer
+  setTimeout（crash، Math.random（） * 4000 + 2000）;
+｝
+
+function cashOut（） ｛
+  if （!active） return;
+
+  let win = Math.floor（pot * （Math.random（） * 2 + 1））;
+  balance += win;
+  log（"You cashed out: +" + win）;
+  reset（）;
+｝
+
+function crash（） ｛
+  if （!active） return;
+  log（"💥 You got caught! Lost the pot."）;
+  reset（）;
+｝
+
+function reset（） ｛
+  pot = 0;
+  active = false;
+  update（）;
+｝
+
+update（）;
+</script>
+
+</body>
+</html>
